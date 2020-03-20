@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Implements hook_views_api()
+ */
+function views_jump_menu_enhanced_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'views_jump_menu_enhanced'),
+    'template path' => drupal_get_path('module', 'views_jump_menu_enhanced') . '/themes',
+  );
+}

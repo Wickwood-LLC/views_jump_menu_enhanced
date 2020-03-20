@@ -1,0 +1,6 @@
+name = Views Jump Menu Enhanced
+description = Provides enhanced views jump menu.
+core = 7.x
+dependencies[] = views
+
+files[] = plugins/views_plugin_style_jump_menu_enhanced.inc
