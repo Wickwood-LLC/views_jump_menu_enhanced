@@ -18,6 +18,7 @@ class views_plugin_style_jump_menu_enhanced extends views_plugin_style_jump_menu
   public function option_definition() {
     $options = parent::option_definition();
 
+    $options['default_value_ignore_fragment'] = array('default' => TRUE, 'bool' => TRUE);
     $options['parent_page_path'] = array('default' => '');
     $options['parent_page_label'] = array('default' => '', 'translatable' => TRUE);
     return $options;
@@ -28,7 +29,18 @@ class views_plugin_style_jump_menu_enhanced extends views_plugin_style_jump_menu
    */
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
-    $handlers = $this->display->handler->get_handlers('field');
+
+    $form['default_value_ignore_fragment'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Ignore fragment when comparing current contextual filter value'),
+      '#default_value' => !empty($this->options['default_value_ignore_fragment']),
+      '#description' => t('If checked, fragment in path will be ignored when comparing current path for default option in the jump menu.'),
+      '#states' => array(
+        'invisible' => array(
+          ':input[name="style_options\\[default_value\\]"]' => array('checked' => FALSE),
+        ),
+      ),
+    );
 
     $form['parent_page_path'] = array(
       '#type' => 'textfield',
@@ -98,9 +110,16 @@ class views_plugin_style_jump_menu_enhanced extends views_plugin_style_jump_menu
         else {
           $options[$key] = $field;
         }
-        $url_options_for_path_without_fragment = $url_options;
-        unset($url_options_for_path_without_fragment['fragment']);
-        $paths[url($url_options['path'], $url_options_for_path_without_fragment)] = $key;
+
+        if ($this->options['default_value'] && $this->options['default_value_ignore_fragment']) {
+          $url_options_for_path_without_fragment = $url_options;
+          unset($url_options_for_path_without_fragment['fragment']);
+          $paths[url($url_options['path'], $url_options_for_path_without_fragment)] = $key;
+        }
+        else {
+          $paths[$path] = $key;
+        }
+
         $this->view->row_index++;
       }
     }
