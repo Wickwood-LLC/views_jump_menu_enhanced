@@ -98,7 +98,9 @@ class views_plugin_style_jump_menu_enhanced extends views_plugin_style_jump_menu
         else {
           $options[$key] = $field;
         }
-        $paths[$path] = $key;
+        $url_options_for_path_without_fragment = $url_options;
+        unset($url_options_for_path_without_fragment['fragment']);
+        $paths[url($url_options['path'], $url_options_for_path_without_fragment)] = $key;
         $this->view->row_index++;
       }
     }
